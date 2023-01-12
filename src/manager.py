@@ -3,7 +3,7 @@ import random
 class LeagueManager:
 
     def __init__(self, data:dict) -> None:
-        self._CORE = data
+        self._DATA = data
         self._COMPLETED = False
         self._week = 1
         self._mover_week = 1
@@ -63,7 +63,7 @@ class LeagueManager:
             return list(filter(lambda x: x["marketcap"] > value, players))
 
     def getTeamIdByName(self, team_name:str) -> int:
-        for each in self._CORE["teams"]:
+        for each in self._DATA["teams"]:
             if each["team_name"] == team_name:
                 return each["team_id"]
 
@@ -86,10 +86,10 @@ class LeagueManager:
         return fixture
 
     def _playMatch(self, home_id:int, home_name:str, away_id:int, away_name:str, week:int, match_id:int) -> None:
-        home_mcap = self._CORE["teams"][home_id]["marketcap"]
-        away_mcap = self._CORE["teams"][away_id]["marketcap"]
-        home_players = self._CORE["players"][(home_id*11):((home_id+1)*11)]
-        away_players = self._CORE["players"][(away_id*11):((away_id+1)*11)]
+        home_mcap = self._DATA["teams"][home_id]["marketcap"]
+        away_mcap = self._DATA["teams"][away_id]["marketcap"]
+        home_players = self._DATA["players"][(home_id*11):((home_id+1)*11)]
+        away_players = self._DATA["players"][(away_id*11):((away_id+1)*11)]
         home_score = 0
         away_score = 0
         actions = []
@@ -146,36 +146,36 @@ class LeagueManager:
 
     def _endOfMatch(self, home_score:int, away_score:int, home_id:int, away_id:int) -> None:
         if home_score > away_score:
-            self._CORE["teams"][home_id]["match_played"] += 1
-            self._CORE["teams"][home_id]["match_win"] += 1
-            self._CORE["teams"][home_id]["points"] += 3
-            self._CORE["teams"][away_id]["match_played"] += 1
-            self._CORE["teams"][away_id]["match_lost"] += 1
-            # self._CORE["teams"][away_id]["points"] += 0
+            self._DATA["teams"][home_id]["match_played"] += 1
+            self._DATA["teams"][home_id]["match_win"] += 1
+            self._DATA["teams"][home_id]["points"] += 3
+            self._DATA["teams"][away_id]["match_played"] += 1
+            self._DATA["teams"][away_id]["match_lost"] += 1
+            # self._DATA["teams"][away_id]["points"] += 0
         elif home_score < away_score:
-            self._CORE["teams"][home_id]["match_played"] += 1
-            self._CORE["teams"][home_id]["match_lost"] += 1
-            # self._CORE["teams"][home_id]["points"] += 0
-            self._CORE["teams"][away_id]["match_played"] += 1
-            self._CORE["teams"][away_id]["match_win"] += 1
-            self._CORE["teams"][away_id]["points"] += 3
+            self._DATA["teams"][home_id]["match_played"] += 1
+            self._DATA["teams"][home_id]["match_lost"] += 1
+            # self._DATA["teams"][home_id]["points"] += 0
+            self._DATA["teams"][away_id]["match_played"] += 1
+            self._DATA["teams"][away_id]["match_win"] += 1
+            self._DATA["teams"][away_id]["points"] += 3
         else:
-            self._CORE["teams"][home_id]["match_played"] += 1
-            self._CORE["teams"][home_id]["match_draw"] += 1
-            self._CORE["teams"][home_id]["points"] += 1
-            self._CORE["teams"][away_id]["match_played"] += 1
-            self._CORE["teams"][away_id]["match_draw"] += 1
-            self._CORE["teams"][away_id]["points"] += 1
+            self._DATA["teams"][home_id]["match_played"] += 1
+            self._DATA["teams"][home_id]["match_draw"] += 1
+            self._DATA["teams"][home_id]["points"] += 1
+            self._DATA["teams"][away_id]["match_played"] += 1
+            self._DATA["teams"][away_id]["match_draw"] += 1
+            self._DATA["teams"][away_id]["points"] += 1
 
     def _scoreAndConcedeGoal(self, scorer_team_id:int, conceder_team_id:int, player_id:int) -> None:
-        self._CORE["teams"][scorer_team_id]["goal_scored"] += 1
-        self._CORE["teams"][scorer_team_id]["average"] += 1
-        self._CORE["teams"][conceder_team_id]["goal_conceded"] += 1
-        self._CORE["teams"][conceder_team_id]["average"] -= 1
-        self._CORE["players"][player_id]["goal"] += 1
+        self._DATA["teams"][scorer_team_id]["goal_scored"] += 1
+        self._DATA["teams"][scorer_team_id]["average"] += 1
+        self._DATA["teams"][conceder_team_id]["goal_conceded"] += 1
+        self._DATA["teams"][conceder_team_id]["average"] -= 1
+        self._DATA["players"][player_id]["goal"] += 1
 
     def _scoreAssist(self, player_id:int) -> None:
-        self._CORE["players"][player_id]["assist"] += 1
+        self._DATA["players"][player_id]["assist"] += 1
 
     def _selectGoalScorer(self, players:dict, goal_type:str) -> dict:
         pl_dict = {"goalkeeper":[], "defenders":[], "midfielders":[], "strikers":[]}
@@ -222,8 +222,8 @@ class LeagueManager:
                     current.append(
                         (
                             match_id_counter,
-                            self._CORE["teams"][team1_id]["team_id"], self._CORE["teams"][team1_id]["team_name"], self._CORE["teams"][team1_id]["team_short_name"],
-                            self._CORE["teams"][team2_id]["team_id"], self._CORE["teams"][team2_id]["team_name"], self._CORE["teams"][team2_id]["team_short_name"]
+                            self._DATA["teams"][team1_id]["team_id"], self._DATA["teams"][team1_id]["team_name"], self._DATA["teams"][team1_id]["team_short_name"],
+                            self._DATA["teams"][team2_id]["team_id"], self._DATA["teams"][team2_id]["team_name"], self._DATA["teams"][team2_id]["team_short_name"]
                         )
                     )
             else:
@@ -233,8 +233,8 @@ class LeagueManager:
                     current.append(
                         (
                             match_id_counter,
-                            self._CORE["teams"][team2_id]["team_id"], self._CORE["teams"][team2_id]["team_name"], self._CORE["teams"][team2_id]["team_short_name"],
-                            self._CORE["teams"][team1_id]["team_id"], self._CORE["teams"][team1_id]["team_name"], self._CORE["teams"][team1_id]["team_short_name"]
+                            self._DATA["teams"][team2_id]["team_id"], self._DATA["teams"][team2_id]["team_name"], self._DATA["teams"][team2_id]["team_short_name"],
+                            self._DATA["teams"][team1_id]["team_id"], self._DATA["teams"][team1_id]["team_name"], self._DATA["teams"][team1_id]["team_short_name"]
                         )
                     )
                 match_id_counter += 1
