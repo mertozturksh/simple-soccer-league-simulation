@@ -229,7 +229,7 @@ class MainWindow(QtWidgets.QMainWindow):
             button = self.UI.scrollAreaWidgetContents.findChild(QtWidgets.QPushButton, f"_menu_teams_{i}")
             button.setIcon(QtGui.QIcon(os.path.join("icons", "teams", f"team_icon_{i}.gif")))
             button.setIconSize(QtCore.QSize(25,25))
-            button.setText(" "+self.LeagueManager._CORE["teams"][i]["team_name"])
+            button.setText(" "+self.LeagueManager._DATA["teams"][i]["team_name"])
             button.setLayoutDirection(QtCore.Qt.LeftToRight)
 
     def _set_teams_buttons_signals(self):
@@ -379,7 +379,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # filling tableWidget's
     def _fill_first_page_tableWidget(self):
-        data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._CORE["teams"],value="points")
+        data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._DATA["teams"],value="points")
         self.UI._body_table_tableWidget.setRowCount(20)
         for i,each in enumerate(data):
             item = QtWidgets.QTableWidgetItem(str(i+1))
@@ -490,7 +490,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.UI._body_fixture_tableWidget.item(i,j).setBackground(QtGui.QColor(248, 249, 250))
 
     def _fill_second_page_second_tableWidget(self):
-        data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._CORE["teams"],value="points")
+        data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._DATA["teams"],value="points")
         self.UI._body_fixture_table_tableWidget.setRowCount(20)
         for i,each in enumerate(data):
             item = QtWidgets.QTableWidgetItem(str(i+1))
@@ -514,7 +514,7 @@ class MainWindow(QtWidgets.QMainWindow):
             text = "points" if value == "Points" else "goal_scored" if value == "Goals For" else "average" if value == "Goal Difference"\
                 else "goal_conceded" if value == "Goals Against" else "match_win" if value == "Matches Won" else "match_lost"\
                 if value == "Matches Lost" else "match_draw" if value == "Matches Drawn" else "marketcap"
-            data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._CORE["teams"],value=text)
+            data = self.LeagueManager.sortTeamsByValue(self.LeagueManager._DATA["teams"],value=text)
             self.UI._body_stats_tableWidget.setColumnCount(4)
             self.UI._body_stats_tableWidget.setHorizontalHeaderLabels(["#","","Club",value])
             self.UI._body_stats_tableWidget.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
@@ -541,7 +541,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.UI._body_stats_tableWidget.item(i,j).setBackground(QtGui.QColor(248, 249, 250))
         else:   #players    # goal assist marketcap
             text = "goal" if value == "Goals" else "assist" if value == "Assists" else "marketcap"
-            data = self.LeagueManager.sortPlayersByValue(self.LeagueManager._CORE["players"], value=text, is_ascending=True)
+            data = self.LeagueManager.sortPlayersByValue(self.LeagueManager._DATA["players"], value=text, is_ascending=True)
             self.UI._body_stats_tableWidget.setColumnCount(6)
             self.UI._body_stats_tableWidget.setHorizontalHeaderLabels(["#","Club","No","Name","Position",value])
             self.UI._body_stats_tableWidget.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
@@ -670,11 +670,11 @@ class MainWindow(QtWidgets.QMainWindow):
             image = QtGui.QPixmap(os.path.join("icons", "teams", f"team_icon_{team_id}.gif"))
             self.UI._team_logo_area.setScaledContents(True)
             self.UI._team_logo_area.setPixmap(image)
-            self.UI._label_team_name.setText(self.LeagueManager._CORE["teams"][team_id]["team_name"])
-            self.UI._label_team_short_name.setText(self.LeagueManager._CORE["teams"][team_id]["team_short_name"])
-            self.UI._label_team_president.setText("President :   "+self.LeagueManager._CORE["teams"][team_id]["president"]+"  ")
-            self.UI._label_team_coach.setText("Coach      :   "+self.LeagueManager._CORE["teams"][team_id]["coach"]+"  ")
-            data = self.LeagueManager.filterPlayersByValue(players=self.LeagueManager._CORE["players"], feature="team_id", value=team_id)
+            self.UI._label_team_name.setText(self.LeagueManager._DATA["teams"][team_id]["team_name"])
+            self.UI._label_team_short_name.setText(self.LeagueManager._DATA["teams"][team_id]["team_short_name"])
+            self.UI._label_team_president.setText("President :   "+self.LeagueManager._DATA["teams"][team_id]["president"]+"  ")
+            self.UI._label_team_coach.setText("Coach      :   "+self.LeagueManager._DATA["teams"][team_id]["coach"]+"  ")
+            data = self.LeagueManager.filterPlayersByValue(players=self.LeagueManager._DATA["players"], feature="team_id", value=team_id)
             self.UI._body_teams_tableWidget.setColumnCount(7)
             self._set_fourth_page_tableWidget_column_sizes(7)
             self.UI._body_teams_tableWidget.setHorizontalHeaderLabels(["No","Name","Position","Country","Marketcap","Goal","Assist"])
